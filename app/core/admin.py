@@ -47,3 +47,12 @@ class UserAdmin(BaseUserAdmin):
             )
         }),
     )
+
+
+@admin.register(models.Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    """Define recipe page."""
+    list_display = (
+        'title', 'time_minutes', 'price', 'user'
+    )
+    ordering = ('id',)
