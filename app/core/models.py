@@ -6,6 +6,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from core.managers import UserManager
@@ -35,3 +36,37 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+
+class Recipe(models.Model):
+    """Recipe object."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='recipes',
+        verbose_name=_('user'),
+    )
+    title = models.CharField(
+        max_length=255,
+        verbose_name=_('title'),
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name=_('description'),
+    )
+    time_minutes = models.IntegerField(
+        verbose_name=_('time'),
+    )
+    price = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        verbose_name=_('price'),
+    )
+    link = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='link',
+    )
+
+    def __str__(self):
+        return self.title
