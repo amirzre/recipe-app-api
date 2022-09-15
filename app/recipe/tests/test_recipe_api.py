@@ -11,7 +11,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 from core.models import Recipe
-from recipe.serializer import RecipeSerializer
+from recipe.serializers import RecipeSerializer
 
 
 def create_recipe(user, **params):
@@ -28,7 +28,7 @@ def create_recipe(user, **params):
     return recipe
 
 
-RECIPE_URL = reverse('recipe:recipe-list')
+RECIPE_URL = reverse('recipe:recipes-list')
 
 
 class PublicRecipeApiTests(TestCase):
