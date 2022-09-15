@@ -56,3 +56,10 @@ class RecipeAdmin(admin.ModelAdmin):
         'title', 'time_minutes', 'price', 'user'
     )
     ordering = ('id',)
+
+
+@admin.register(models.Tag)
+class TagAdmin(admin.ModelAdmin):
+    """Define tag page."""
+    list_display = ('name', 'user')
+    ordering = ('id',)
