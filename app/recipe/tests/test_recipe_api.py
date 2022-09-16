@@ -33,7 +33,7 @@ def create_recipe(user, **params):
 
 def detail_url(recipe_id):
     """Create and return a recipe detail URL."""
-    return reverse('recipe:recipes-detail', args=[recipe_id])
+    return reverse('recipe:recipe-detail', args=[recipe_id])
 
 
 def create_user(**params):
@@ -41,7 +41,7 @@ def create_user(**params):
     return get_user_model().objects.create_user(**params)
 
 
-RECIPES_URL = reverse('recipe:recipes-list')
+RECIPES_URL = reverse('recipe:recipe-list')
 
 
 class PublicRecipeApiTests(TestCase):
