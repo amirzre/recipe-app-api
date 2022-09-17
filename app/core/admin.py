@@ -63,3 +63,10 @@ class TagAdmin(admin.ModelAdmin):
     """Define tag page."""
     list_display = ('name', 'user')
     ordering = ('id',)
+
+
+@admin.register(models.Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    """Define ingredient page."""
+    list_display = ('name', 'user')
+    ordering = ('id',)
