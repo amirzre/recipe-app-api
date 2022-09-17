@@ -69,12 +69,10 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         'Tag',
-        related_name='recipe_tags',
         verbose_name=_('tags'),
     )
     ingredients = models.ManyToManyField(
         'Ingredient',
-        related_name='recipe_ingredients',
         verbose_name=_('ingredients'),
     )
 
