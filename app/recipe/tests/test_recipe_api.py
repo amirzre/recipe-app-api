@@ -368,13 +368,13 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_filter_by_tags(self):
         """Test filtering recipes by tags."""
-        r1 = create_recipe(user=self.user, title='title1')
-        r2 = create_recipe(user=self.user, title='title2')
-        tag1 = Tag.objects.create(user=self.user, name='tag1')
-        tag2 = Tag.objects.create(user=self.user, name='tag2')
+        r1 = create_recipe(user=self.user, title='title one')
+        r2 = create_recipe(user=self.user, title='title two')
+        tag1 = Tag.objects.create(user=self.user, name='tag one')
+        tag2 = Tag.objects.create(user=self.user, name='tag two')
         r1.tags.add(tag1)
         r2.tags.add(tag2)
-        r3 = create_recipe(user=self.user, title='title3')
+        r3 = create_recipe(user=self.user, title='title three')
 
         params = {'tags': f'{tag1.id}, {tag2.id}'}
         res = self.client.get(RECIPES_URL, params)
@@ -388,15 +388,15 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_filter_by_ingredients(self):
         """Test filtering recipes by ingredients."""
-        r1 = create_recipe(user=self.user, title='title1')
-        r2 = create_recipe(user=self.user, title='title2')
-        ing1 = Ingredient.objects.create(user=self.user, name='name1')
-        ing2 = Ingredient.objects.create(user=self.user, name='name2')
+        r1 = create_recipe(user=self.user, title='title one')
+        r2 = create_recipe(user=self.user, title='title two')
+        ing1 = Ingredient.objects.create(user=self.user, name='ing one')
+        ing2 = Ingredient.objects.create(user=self.user, name='ing two')
         r1.ingredients.add(ing1)
         r2.ingredients.add(ing2)
-        r3 = create_recipe(user=self.user, title='title3')
+        r3 = create_recipe(user=self.user, title='title three')
 
-        params = {'ingredients': f'{ing1}, {ing2}'}
+        params = {'ingredients': f'{ing1.id}, {ing2.id}'}
         res = self.client.get(RECIPES_URL, params)
 
         s1 = RecipeSerializer(r1)
