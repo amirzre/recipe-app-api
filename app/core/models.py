@@ -10,6 +10,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from core.managers import UserManager
+from extensions.path import recipe_image_file_path
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -66,6 +67,11 @@ class Recipe(models.Model):
         max_length=255,
         blank=True,
         verbose_name='link',
+    )
+    image = models.ImageField(
+        upload_to=recipe_image_file_path,
+        null=True,
+        verbose_name=_('image'),
     )
     tags = models.ManyToManyField(
         'Tag',
