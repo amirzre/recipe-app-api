@@ -1,31 +1,32 @@
 """
-Serializers for the user API View.
+Serializers for the user API view.
 """
-from django.contrib.auth import (
-    get_user_model,
-    authenticate,
-)
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer
+)
+
+from core.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object."""
 
     class Meta:
-        model = get_user_model()
-        fields = ('email', 'password', 'name')
+        model = User
+        fields = ('email', 'password', 'phone')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
-    def create(self, validate_data):
-        """Create and return user with encrypted password."""
-        return get_user_model().objects.create_user(**validate_data)
+    def create(self, validated_data):
+        """Create and return a user with encrypted password."""
+        return get_user_model().objects.create_user(**validated_data)
 
-    def update(self, instance, validate_data):
+    def update(self, instance, validated_data):
         """Update and return user."""
-        password = validate_data.pop('password', None)
-        user = super().update(instance, validate_data)
+        password = validated_data.pop('password', None)
+        user = super().update(instance, validated_data)
 
         if password:
             user.set_password(password)
@@ -34,26 +35,23 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class AuthTokenSerializer(serializers.Serializer):
-    """Serializer for the user auth token."""
-    email = serializers.EmailField()
-    password = serializers.CharField(
-        style={'input_type': 'password'},
-        trim_whitespace=False,
-    )
+class UserTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token['email'] = user.email
+        token['is_active'] = user.is_active
+        token['is_staff'] = user.is_staff
+        token['is_superuser'] = user.is_superuser
+
+        return token
 
     def validate(self, attrs):
-        """Validate and authenticate the user."""
-        email = attrs.get('email')
-        password = attrs.get('password')
-        user = authenticate(
-            request=self.context.get('request'),
-            username=email,
-            password=password,
-        )
-        if not user:
-            msg = _('Unable to authenticate with provided credentials.')
-            raise serializers.ValidationError(msg, code='authorization')
+        data = super().validate(attrs)
 
-        attrs['user'] = user
-        return attrs
+        serializer = UserSerializer(self.user).data
+        for key, value in serializer.items():
+            data[key] = value
+
+        return data
